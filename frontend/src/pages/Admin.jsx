@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 const Admin = () => {
     const navigate = useNavigate();
     const onSubmit = async (values) => {
-        const response = await fetch('http://localhost:5001/api/lots', {
+        const response = await fetch('/api/lots', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(values) 
+            body: JSON.stringify(values)
         });
         if (response.ok) navigate('/lots');
         else alert('Помилка додавання');

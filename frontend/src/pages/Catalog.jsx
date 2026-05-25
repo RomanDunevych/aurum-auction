@@ -8,7 +8,7 @@ const Catalog = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     const fetchLots = () => {
-        let url = `http://localhost:5001/api/lots?category=${activeCat}&sort=${sortOrder}`;
+        let url = `/api/lots?category=${activeCat}&sort=${sortOrder}`;
         fetch(url).then(res => res.json()).then(data => setLots(data));
     };
 
@@ -16,12 +16,14 @@ const Catalog = () => {
 
     const handleBid = async (lot) => {
         if (!user) return alert("Будь ласка, увійдіть у систему!");
-        if (lot.end_time < Date.now()) return alert("Вибачте, торги за цим лотом вже завершено!");
+        
+        let targetTime = String(lot.end_time).includes('T') ? new Date(lot.end_time).getTime() : Number(lot.end_time);
+        if (targetTime < Date.now()) return alert("Вибачте, торги за цим лотом вже завершено!");
 
         const amount = prompt(`Поточна ціна: $${lot.current_price}. Ваша ставка:`);
         if (!amount || parseFloat(amount) <= lot.current_price) return alert("Ставка має бути вищою за поточну!");
 
-        const response = await fetch('http://localhost:5001/api/bids', {
+        const response = await fetch('/api/bids', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ lot_id: lot.id, user_id: user.id, amount: parseFloat(amount) })
@@ -36,7 +38,7 @@ const Catalog = () => {
     };
 
     const handleDelete = (id) => {
-        fetch(`http://localhost:5001/api/lots/${id}`, { method: 'DELETE' }).then(() => fetchLots());
+        fetch(`/api/lots/${id}`, { method: 'DELETE' }).then(() => fetchLots());
     };
 
     return (
@@ -61,7 +63,9 @@ const Catalog = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
                 {lots.map(lot => {
-                    const isFinished = lot.end_time < Date.now();
+                    let targetTime = String(lot.end_time).includes('T') ? new Date(lot.end_time).getTime() : Number(lot.end_time);
+                    const isFinished = targetTime < Date.now();
+                    
                     return (
                         <div key={lot.id} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', height: '560px' }}>
                             <img src={lot.image_url} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px' }} />

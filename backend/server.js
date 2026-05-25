@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const db = require('./database');
 
 const app = express();
@@ -11,7 +12,6 @@ const setupDemoLots = () => {
     const timePlus1H = Date.now() + 1 * 60 * 60 * 1000; 
     const timeMinus1H = Date.now() - 1 * 60 * 60 * 1000;
 
-    
     db.run(`UPDATE Lots SET end_time = ? WHERE id = 1`, [timePlus2H]);
     db.run(`UPDATE Lots SET end_time = ? WHERE id = 2`, [timePlus1H]);
     db.run(`UPDATE Lots SET end_time = ? WHERE id = 3`, [timeMinus1H]);
@@ -85,4 +85,11 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-app.listen(5001, () => console.log('Server running on port 5001'));
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
