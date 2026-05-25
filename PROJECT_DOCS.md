@@ -4,7 +4,7 @@
 **AURUM AUCTION** — це сучасна CRM та веб-система для проведення онлайн-аукціонів, управління лотами та ставками в реальному часі із застосуванням Glassmorphism дизайну.
 
 ## УРЛ
-**Live URL:** [https://aurum-auction-client.vercel.app](https://aurum-auction-client.vercel.app) *(Примітка: замініть посилання на власне після деплою)*
+**Live URL:** [https://aurum-auction-client.vercel.app][(https://aurum-auction-client.vercel.app)](https://aurum-auction-app.onrender.com/)
 
 ## Стек технологій
 
